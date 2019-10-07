@@ -11,15 +11,25 @@ exports.get = (id, callback) => {
     });
 };
 
-exports.add = (data, callback) => {
-  mongo.getDb().collection(collectionName).insertOne(data, function(err, res) {
-    if (err) throw err;
-  });
+// This function will add a todo to the database
+exports.add = (listId, data, callback) => {
+    const date = new Date().getTime();
+    insertData = {
+        content: data.content,
+        complete: false,
+        completionDate: null,
+        creationDate: date
+    }
+    // This part puts the ID of the Todo on the specified list
+    mongo.getDb().collection(collectionName).insertOne(insertData, (err, res) => {
+        mongo.getDb().collection('lists').updateOne({ _id: ObjectId(listId) }, {$push:{
+            todoIds: insertData._id,
+        }});
+    });
 };
 
 exports.update = (id, data, callback) => {
   mongo.getDb().collection(collectionName).updateOne({ _id: ObjectId(id) }, {$set:{
-      name : data.name
   }}, (err) => {
     callback(err);
   });

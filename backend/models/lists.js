@@ -12,14 +12,18 @@ exports.get = (id, callback) => {
 };
 
 exports.add = (data, callback) => {
-  mongo.getDb().collection(collectionName).insertOne(data, function(err, res) {
+  mongo.getDb().collection(collectionName).insertOne({
+    name : data.name,
+    todoIds: [],
+  }, function(err, res) {
     if (err) throw err;
   });
 };
 
 exports.update = (id, data, callback) => {
   mongo.getDb().collection(collectionName).updateOne({ _id: ObjectId(id) }, {$set:{
-      name : data.name
+      name : data.name,
+      todoIds: [],
   }}, (err) => {
     callback(err);
   });

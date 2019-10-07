@@ -20,9 +20,9 @@ router.get('/:id', (req, res, next) => {
     });
 });
 
-router.post('/', (req, res) => {
+router.post('/:id', (req, res) => {
   // req.query gives the body of the post request
-    todosmodel.add(req.query, (err) => {
+    todosmodel.add(req.params.id, req.query, (err) => {
         if (err) return next(err);
         res.json({ success: true });
   });
@@ -43,7 +43,5 @@ router.delete('/:id', (req, res, next) => {
         res.json({ success: true });
   });
 });
-
-router
 
 module.exports = router;
