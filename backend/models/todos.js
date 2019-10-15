@@ -51,6 +51,7 @@ exports.update = (id, data, callback) => {
   });
 };
 
+//TODO, Check if need to change
 exports.delete = (id, callback) => {
   mongo.getDb().collection(collectionName).deleteOne({ _id: ObjectId(id) }, (err) => {
     callback(err);

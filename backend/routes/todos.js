@@ -20,7 +20,7 @@ router.get('/:id', (req, res, next) => {
     });
 });
 
-router.post('/:id', (req, res) => {
+router.post('/', (req, res) => {
   // req.query gives the body of the post request
     todosmodel.add(req.params.id, req.query, (err) => {
         if (err) return next(err);
