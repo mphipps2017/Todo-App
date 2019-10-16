@@ -42,10 +42,17 @@ exports.add = (listId, data, callback) => {
 
 /*
   Updates the todo with the given id, and inputs the data (not complete)
+  @Params
+    id = The ID of the object we are editing
+    data = The content we are trying to edit
+
+  Note: This function must incldue the content of the todo or else the todo's content
+  will get over written as 'undefined'
 */
-//TODO Make this function properly
 exports.update = (id, data, callback) => {
   mongo.getDb().collection(collectionName).updateOne({ _id: ObjectId(id) }, {$set:{
+    content: data.content,
+    complete: (data.complete == 'true'),
   }}, (err) => {
     callback(err);
   });
