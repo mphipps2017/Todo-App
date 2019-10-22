@@ -1,0 +1,30 @@
+.link{
+    height: 1em;
+    color: #474747;
+    display: inline-block;
+    margin: 0 .5em;
+    transition: color .5s;
+}
+
+.active{
+    border-bottom: solid;
+    border-width:1px;
+    border-color: #db5461;
+    padding-bottom: .3em;
+}
+
+.link:hover{
+    color: #05a8aa;
+}
+
+.nav-links{
+    padding: .5em 1em;
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media (max-width: 800px){
+    .nav-links{
+        justify-content: center;
+    }
+}
