@@ -20,7 +20,7 @@ router.get('/:id', (req, res, next) => {
     });
 });
 
-router.post('/', (req, res) => {
+router.post('/:id', (req, res) => {
   // req.query gives the body of the post request
   // Like req.body but is located in URL bar.
     todosmodel.add(req.params.id, req.body, (err) => {
@@ -28,7 +28,7 @@ router.post('/', (req, res) => {
         res.json({ success: true });
   });
 
-  res.send(req.query);
+  res.send(req.body);
 });
 
 router.put('/:id', (req, res, next) => {

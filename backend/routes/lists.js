@@ -24,17 +24,17 @@ router.get('/:id', (req, res, next) => {
 // Route handler for post requests
 router.post('/', (req, res) => {
   // req.query gives the body of the post request
-    listsmodel.add(req.query, (err) => {
+    listsmodel.add(req.body, (err) => {
     if (err) return next(err);
     res.json({ success: true });
   });
 
-  res.send(req.query);
+  res.send(req.body);
 });
 
 // Route handler for put requests
 router.put('/:id', (req, res, next) => {
-    listsmodel.update(req.params.id, req.query, (err) => {
+    listsmodel.update(req.params.id, req.body, (err) => {
         if (err) return next(err);
         res.json({ success: true });
     });
