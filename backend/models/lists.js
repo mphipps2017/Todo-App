@@ -11,18 +11,23 @@ exports.get = (id, callback) => {
     });
 };
 
-exports.add = (data, callback) => {
-  mongo.getDb().collection(collectionName).insertOne({
-    name : data.name,
-    todoIds: [],
-  }, function(err, res) {
-    if (err) throw err;
+exports.add = (userId, data, callback) => {
+  const date = new Date().getTime();
+  insertData = {
+  name   : data.name,
+  todoIds: [],
+}
+  // This part puts the ID of the list into the user's account
+  mongo.getDb().collection(collectionName).insertOne(insertData, (err, res) => {
+    mongo.getDb().collection('users').updateOne({ _id: ObjectId(userId) }, {$push:{
+      listIDs: insertData._id,
+    }});
   });
 };
 
 exports.update = (id, data, callback) => {
   mongo.getDb().collection(collectionName).updateOne({ _id: ObjectId(id) }, {$set:{
-      name : data.name,
+      name   : data.name,
       todoIds: [],
   }}, (err) => {
     callback(err);

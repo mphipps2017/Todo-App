@@ -22,9 +22,9 @@ router.get('/:id', (req, res, next) => {
 });
 
 // Route handler for post requests
-router.post('/', (req, res) => {
+router.post('/:id', (req, res) => {
   // req.query gives the body of the post request
-    listsmodel.add(req.body, (err) => {
+    listsmodel.add(req.params.id, req.body, (err) => {
     if (err) return next(err);
     res.json({ success: true });
   });
