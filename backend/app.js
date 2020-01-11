@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const mongo = require('./helpers/mongoUtil.js');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
 var db;
 
 //app.use(express.static(__dirname + '/public'));

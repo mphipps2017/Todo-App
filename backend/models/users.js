@@ -1,6 +1,7 @@
 //Models Serve to the DB and get from the DB
+// https://codeforgeek.com/password-hashing-nodejs/ Password hashing guide
 const ObjectId = require('mongodb').ObjectId;
-
+const bcrypt = require('bcrypt');
 const mongo = require('../helpers/mongoUtil.js');
 
 const collectionName = 'users';
@@ -12,12 +13,14 @@ exports.get = (id, callback) => {
 };
 
 exports.add = (data, callback) => {
-    mongo.getDb().collection(collectionName).insertOne({
-        username: data.username,
-        password: data.password,
-        listIDs : [],
-    }, function(err, res) {
-        if (err) throw err;
+    bcrypt.hash(data.password, 10, function(err, hash){
+        mongo.getDb().collection(collectionName).insertOne({
+            username: data.username,
+            password: hash,
+            listIDs : [],
+        }, function(err, res) {
+            if (err) throw err;
+        });
     });
 };
 

@@ -1,0 +1,11 @@
+.list-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.list-wrapper .items{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
