@@ -20,8 +20,9 @@ exports.get = (id, callback) => {
   list it is being added to. 
 
   @Inputs
-    listId = ID of at least one list this todo is stored on (can add more than one later)
-    data   = The content stored on this todo
+    listId           = ID of at least one list this todo is stored on (can add more than one later)
+    data             = The content stored on this todo
+    parentCollection = the collection where the parent document is located
   
 */
 exports.add = (listId, data, callback) => {
@@ -30,11 +31,12 @@ exports.add = (listId, data, callback) => {
         content: data.content,
         complete: false,
         completionDate: null,
-        creationDate: date
+        creationDate: date,
+        todoIds: [], // These are sub todos for this todo (like a sub list)
     }
     // This part puts the ID of the Todo on the specified list
     mongo.getDb().collection(collectionName).insertOne(insertData, (err, res) => {
-        mongo.getDb().collection('lists').updateOne({ _id: ObjectId(listId) }, {$push:{
+        mongo.getDb().collection(data.parentCollection).updateOne({ _id: ObjectId(listId) }, {$push:{
             todoIds: insertData._id,
         }});
     });
