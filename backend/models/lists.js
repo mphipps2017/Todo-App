@@ -15,7 +15,8 @@ exports.add = (userId, data, callback) => {
   const date = new Date().getTime();
   insertData = {
   name   : data.name,
-  todoIds: [],
+  todoIDs: [],
+  labels : [],
 }
   // This part puts the ID of the list into the user's account
   mongo.getDb().collection(collectionName).insertOne(insertData, (err, res) => {
@@ -28,7 +29,7 @@ exports.add = (userId, data, callback) => {
 exports.update = (id, data, callback) => {
   mongo.getDb().collection(collectionName).updateOne({ _id: ObjectId(id) }, {$set:{
       name   : data.name,
-      todoIds: [],
+      todoIDs: [],
   }}, (err) => {
     callback(err);
   });

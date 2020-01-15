@@ -32,13 +32,14 @@ exports.add = (listId, data, callback) => {
         complete: false,
         completionDate: null,
         creationDate: date,
-        todoIds: [], // These are sub todos for this todo (like a sub list)
+        todoIDs: [], // These are sub todos for this todo (like a sub list)
     }
     // This part puts the ID of the Todo on the specified list
     mongo.getDb().collection(collectionName).insertOne(insertData, (err, res) => {
-        mongo.getDb().collection(data.parentCollection).updateOne({ _id: ObjectId(listId) }, {$push:{
-            todoIds: insertData._id,
-        }});
+        mongo.getDb().collection(data.parentCollection).updateOne(
+          { _id: ObjectId(listId) },
+          {$push:{ todoIDs: insertData._id,}
+        });
     });
 };
 
@@ -68,12 +69,33 @@ exports.update = (id, data, callback) => {
   }
 };
 
-//TODO Update use mdb $pull
-// https://docs.mongodb.com/manual/reference/operator/update/pull/
+
+/*
+  Delets the todo and all the lists / 
+  @Params
+    id = The ID of the object we are editing
+    data = The content we are trying to edit
+  
+  If data.complete != undefined (updates it based on if it == 'true')
+  otherwise the function updates data.content (even if data.content == 'undefined')
+*/
 exports.delete = (id, callback) => {
+  // Delets the document containing this todo
   mongo.getDb().collection(collectionName).deleteOne({ _id: ObjectId(id) }, (err) => {
     callback(err);
   });
+
+  // Removes todo from all todos that contain this todo
+  mongo.getDb().collection('todos').updateMany(
+    { },
+    { $pull: { todoIDs: ObjectId(id) } },
+    { });
+  
+  // Removes todo from all lists that contain this todo
+  mongo.getDb().collection('lists').updateMany(
+    { },
+    { $pull: { todoIDs: ObjectId(id) } },
+    { });
 };
 
 exports.all = (callback) => {

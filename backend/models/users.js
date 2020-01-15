@@ -18,6 +18,7 @@ exports.add = (data, callback) => {
             username: data.username,
             password: hash,
             listIDs : [],
+            labels  : [],
         }, function(err, res) {
             if (err) throw err;
         });
