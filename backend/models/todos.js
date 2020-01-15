@@ -47,20 +47,29 @@ exports.add = (listId, data, callback) => {
   @Params
     id = The ID of the object we are editing
     data = The content we are trying to edit
-
-  Note: This function must incldue the content of the todo or else the todo's content
-  will get over written as 'undefined'
+  
+  If data.complete != undefined (updates it based on if it == 'true')
+  otherwise the function updates data.content (even if data.content == 'undefined')
 */
 exports.update = (id, data, callback) => {
-  mongo.getDb().collection(collectionName).updateOne({ _id: ObjectId(id) }, {$set:{
-    content: data.content,
-    complete: (data.complete == 'true'),
-  }}, (err) => {
-    callback(err);
-  });
+  if(data.complete != undefined){
+    mongo.getDb().collection(collectionName).updateOne({ _id: ObjectId(id) }, {$set:{
+        complete: data.complete == 'true',
+      }}, (err) => {
+        callback(err);
+      });
+    }
+  else{
+    mongo.getDb().collection(collectionName).updateOne({ _id: ObjectId(id) }, {$set:{
+        content: data.content,
+      }}, (err) => {
+        callback(err);
+    });
+  }
 };
 
-//TODO, Check if need to change
+//TODO Update use mdb $pull
+// https://docs.mongodb.com/manual/reference/operator/update/pull/
 exports.delete = (id, callback) => {
   mongo.getDb().collection(collectionName).deleteOne({ _id: ObjectId(id) }, (err) => {
     callback(err);
