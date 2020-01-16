@@ -15,10 +15,11 @@ exports.get = (id, callback) => {
 exports.add = (data, callback) => {
     bcrypt.hash(data.password, 10, function(err, hash){
         mongo.getDb().collection(collectionName).insertOne({
-            username: data.username,
-            password: hash,
-            listIDs : [],
-            labels  : [],
+            username : data.username,
+            password : hash,
+            listIDs  : [],
+            fNoteIDs : [],
+            labels   : [],
         }, function(err, res) {
             if (err) throw err;
         });
@@ -27,14 +28,26 @@ exports.add = (data, callback) => {
 
 // The lists object will contain all the lists on this user's account
 exports.update = (id, data, callback) => {
-    mongo.getDb().collection(collectionName).updateOne({ _id: ObjectId(id) }, {$set:{
-        username: data.username,
-        password: data.password,
-        listIDs : [],
-        labels  : [],
-    }}, (err) => {
-        callback(err);
-    });
+    if(data.password != 'undefined'){
+        bcrypt.hash(data.password, 10, function(err, hash){
+            mongo.getDb().collection(collectionName).({ _id: ObjectId(id) }, {$set:{
+                password : hash,
+            }, function(err, res) {
+                if (err) throw err;
+            });
+        });
+    }
+    else{
+        mongo.getDb().collection(collectionName).updateOne({ _id: ObjectId(id) }, {$set:{
+            username : data.username,
+            password : data.password,
+            listIDs  : [],
+            fNoteIDs : [],
+            labels   : [],
+        }}, (err) => {
+            callback(err);
+        });
+    }
 };
 
 exports.delete = (id, callback) => {
