@@ -30,10 +30,10 @@ exports.add = (data, callback) => {
 exports.update = (id, data, callback) => {
     if(data.password != 'undefined'){
         bcrypt.hash(data.password, 10, function(err, hash){
-            mongo.getDb().collection(collectionName).({ _id: ObjectId(id) }, {$set:{
+            mongo.getDb().collection(collectionName).updateOne({ _id: ObjectId(id) }, {$set:{
                 password : hash,
-            }, function(err, res) {
-                if (err) throw err;
+            }}, (err) => {
+                callback(err);
             });
         });
     }
