@@ -73,11 +73,10 @@ exports.update = (id, data, callback) => {
 /*
   Delets the todo and all the lists / 
   @Params
-    id = The ID of the object we are editing
-    data = The content we are trying to edit
+    id = The document ID for the todo we are deleting
   
-  If data.complete != undefined (updates it based on if it == 'true')
-  otherwise the function updates data.content (even if data.content == 'undefined')
+  This function will delete the todo from both the lists it is associated
+  with and the todos it is associated with
 */
 exports.delete = (id, callback) => {
   // Delets the document containing this todo
@@ -98,6 +97,7 @@ exports.delete = (id, callback) => {
     { });
 };
 
+// model for grabbing all todos
 exports.all = (callback) => {
   mongo.getDb().collection(collectionName).find().toArray((err, result) => {
     callback(err, result);

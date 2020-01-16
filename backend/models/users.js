@@ -31,6 +31,7 @@ exports.update = (id, data, callback) => {
         username: data.username,
         password: data.password,
         listIDs : [],
+        labels  : [],
     }}, (err) => {
         callback(err);
     });
