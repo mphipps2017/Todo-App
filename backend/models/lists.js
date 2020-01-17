@@ -58,10 +58,17 @@ exports.update = (id, data, callback) => {
 };
 
 //Decide what to do with todo children of this list
-exports.delete = (id, callback) => {
+exports.delete = (id, data, callback) => {
   mongo.getDb().collection(collectionName).deleteOne({ _id: ObjectId(id) }, (err) => {
     callback(err);
   });
+  var i;
+  //todo figure out how to access ids for these guys
+  for(i = 0; i < data.todoIDs.length; i++){
+    mongo.getDb().collection(collectionName).deleteOne({ _id: data.todoIDs[i]}, (err) => {
+      callback(err);
+    });
+  }
 };
 
 exports.all = (callback) => {
