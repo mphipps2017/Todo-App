@@ -10,7 +10,7 @@ var db;
 app.use(bodyParser.json());
 app.use(require('./routes/api'));
 
-app.listen(3000, function() {
-  console.log('Listening on port 3000...')
+app.listen(2000, function() {
+  console.log('Listening on port 2000...')
   mongo.connectToServer();
 })

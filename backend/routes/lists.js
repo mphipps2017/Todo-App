@@ -42,7 +42,7 @@ router.put('/:id', (req, res, next) => {
 
 // Route handler for delete requests
 router.delete('/:id', (req, res, next) => {
-  listsmodel.delete(req.params.id, (err) => {
+  listsmodel.delete(req.params.id, req.body, (err) => {
     if (err) return next(err);
     res.json({ success: true });
   });

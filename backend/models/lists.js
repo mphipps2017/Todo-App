@@ -13,6 +13,7 @@ exports.get = (id, callback) => {
     mongo.getDb().collection(collectionName).findOne({ _id: ObjectId(id) }, (err, result) => {
       callback(err, result);
     });
+
 };
 
 /*
@@ -65,7 +66,7 @@ exports.delete = (id, data, callback) => {
   var i;
   //todo figure out how to access ids for these guys
   for(i = 0; i < data.todoIDs.length; i++){
-    mongo.getDb().collection(collectionName).deleteOne({ _id: data.todoIDs[i]}, (err) => {
+    mongo.getDb().collection('todos').deleteOne({ _id: ObjectId(data.todoIDs[i])}, (err) => {
       callback(err);
     });
   }
