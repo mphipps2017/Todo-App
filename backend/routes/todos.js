@@ -39,7 +39,7 @@ router.put('/:id', (req, res, next) => {
 });
 
 router.delete('/:id', (req, res, next) => {
-    todosmodel.delete(req.params.id, (err) => {
+    todosmodel.delete(req.params.id, req.body, (err) => {
         if (err) return next(err);
         res.json({ success: true });
   });

@@ -76,9 +76,12 @@ exports.update = (id, data, callback) => {
     id = The document ID for the todo we are deleting
   
   This function will delete the todo from both the lists it is associated
-  with and the todos it is associated with
+  with and the todos it is associated with.
+
+  Just like with the the list DELETE this one is designed so that data.todoIds contains a list
+  of todos to be deleted.  This logic should be handled on client side.
 */
-exports.delete = (id, callback) => {
+exports.delete = (id, data, callback) => {
   // Delets the document containing this todo
   mongo.getDb().collection(collectionName).deleteOne({ _id: ObjectId(id) }, (err) => {
     callback(err);
@@ -95,6 +98,13 @@ exports.delete = (id, callback) => {
     { },
     { $pull: { todoIDs: ObjectId(id) } },
     { });
+  
+  var i;
+  for(i = 0; i < data.todoIDs.length; i++){
+    mongo.getDb().collection('todos').deleteOne({ _id: ObjectId(data.todoIDs[i])}, (err) => {
+      callback(err);
+    });
+  }
 };
 
 // model for grabbing all todos

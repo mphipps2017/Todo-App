@@ -58,13 +58,21 @@ exports.update = (id, data, callback) => {
   });
 };
 
-//Decide what to do with todo children of this list
+/*
+  This method deletes a list and a corresponding list of todos
+  @Params
+    id   = id of the list to delete'
+    data = variable for store an array (data.todoIds) of all todos to delete.
+  
+  note that this function was designed so that the client would decide what todos to delete.
+*/
 exports.delete = (id, data, callback) => {
   mongo.getDb().collection(collectionName).deleteOne({ _id: ObjectId(id) }, (err) => {
     callback(err);
   });
+
+  // Delets array of todos
   var i;
-  //todo figure out how to access ids for these guys
   for(i = 0; i < data.todoIDs.length; i++){
     mongo.getDb().collection('todos').deleteOne({ _id: ObjectId(data.todoIDs[i])}, (err) => {
       callback(err);
