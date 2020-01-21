@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const mongo = require('../helpers/mongoUtil.js');
 
 const collectionName = 'users';
+const listsmodel = require('./lists.js');
 
 exports.get = (id, callback) => {
     mongo.getDb().collection(collectionName).findOne({ _id: ObjectId(id) }, (err, result) => {
@@ -50,10 +51,34 @@ exports.update = (id, data, callback) => {
     }
 };
 
-exports.delete = (id, callback) => {
+// Should delete all lists and todos that are involved with this user
+exports.delete = (id, data, callback) => {
+    // Delets the user
     mongo.getDb().collection(collectionName).deleteOne({ _id: ObjectId(id) }, (err) => {
         callback(err);
     });
+
+    // Deletes all Flash notes associated with this user
+    var i;
+    for(i = 0; i < data.fNoteIDs.length; i++){
+        mongo.getDb().collection('flashNotes').deleteOne({ _id: ObjectId(data.fNoteIDs[i])}, (err) => {
+          callback(err);
+        });
+    }
+
+    // Deletes all todos and todo lists associated with this user
+    var j;
+    for(j = 0; j < data.listIDs.length; j++){
+        mongo.getDb().collection(collectionName).findOne({ _id: ObjectId(id) }, (err, result) => {
+            // Todo get todos of every list and delete those as well
+            listsmodel.delete(data.listIDs[j], result, (err) => {
+                if (err) return next(err);
+                res.json({ success: true });
+            });
+            callback(err, result);
+        });
+    }
+
 };
 
 exports.all = (callback) => {
